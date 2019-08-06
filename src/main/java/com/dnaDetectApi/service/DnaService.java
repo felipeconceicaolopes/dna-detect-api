@@ -19,6 +19,9 @@ public class DnaService {
 			
 			if(validatingVerticallyIfSimian(matrixDna))
 				return Boolean.TRUE;
+			
+			if(validatingDiagonallyIfSimian(matrixDna))
+				return Boolean.TRUE;
 		}
 		
 		return Boolean.FALSE;
@@ -42,7 +45,7 @@ public class DnaService {
 		return Boolean.TRUE;
 	}
 
-	private static char[][] arraySequencesToMatrix(String[] dna) {
+	private char[][] arraySequencesToMatrix(String[] dna) {
 		StringBuilder baseM = new StringBuilder();
 		char[][] m = new char[6][6];
 		int count = 0;
@@ -61,45 +64,42 @@ public class DnaService {
 		return m;
 	}
 	
-	private static Boolean validatingHorizontallyIfSimian(char dna[][]) {
-
-		for(int i = 0; i < dna.length; i++) {
+	private Boolean validatingHorizontallyIfSimian(char dna[][]) {
+		
+		for(int line = 0; line < dna.length; line++) {
 			int count = 0;
-			StringBuilder teste = new StringBuilder();
-			for(int z = 0; z < dna.length - 1; z++) {
-				int x = z + 1;
-				int y = 0;
-				if(z > dna.length)
-					y = z - 1;
-				
-				if(dna[i][z] == dna[i][x] && dna[i][y] == dna[i][x]) {
+			char letraBase = dna[line][0];
+			for(int column = 1; column < dna.length; column++) {
+				if(letraBase == dna[line][column]) {
 					count++;
-					teste.append(dna[i][z]);
+					if(count >= 3) {	
+						return Boolean.TRUE;
+					}
+				}else {
+					letraBase = dna[line][column];
+					count = 0;
 				}
-			}
-			if(count >= 3) {	
-				return Boolean.TRUE;
 			}
 		}
 		
 		return Boolean.FALSE;
 	}
 	
-	private static Boolean validatingVerticallyIfSimian(char dna[][]) {
+	private Boolean validatingVerticallyIfSimian(char dna[][]) {
 		
-		for(int z = 0; z < dna.length; z++) {
+		for(int column = 0; column < dna.length; column++) {
 			int count = 0;
-			StringBuilder teste = new StringBuilder();
-			for(int i = 0; i < dna.length - 1; i++) {
-				int x = i + 1;
-				int y = 0;
-				if(i > dna.length)
-					y = i - 1;
-				
-				if(dna[i][z] == dna[x][z] && dna[y][z] == dna[x][z]) {
+			char letraBase = dna[0][column];
+			for(int line = 1; line < dna.length; line++) {
+				if(letraBase == dna[line][column]) {
 					count++;
-					teste.append(dna[i][z]);
-				}
+					if(count >= 3) {	
+						return Boolean.TRUE;
+					}
+				}else {
+					letraBase = dna[line][column];
+					count = 0;
+				}	
 			}
 			if(count >= 3) {
 				return Boolean.TRUE;
@@ -108,4 +108,25 @@ public class DnaService {
 		
 		return Boolean.FALSE;
 	}
+	
+	private Boolean validatingDiagonallyIfSimian(char dna[][]) {
+				
+		for(int line = 0 ; line < dna.length ; ++line){
+			int count = 0;
+			char letraBase = dna[line][0];
+		    for(int column = 1 ; column < dna.length - line ; ++column){
+		        if(letraBase == dna[column][column+line]) {
+					count++;
+					if(count >= 3) {	
+						return Boolean.TRUE;
+					}
+				}else {
+					letraBase = dna[column][column+line];
+					count = 0;
+				}
+		    }
+		}
+		
+		return Boolean.FALSE;
+	}	
 }
