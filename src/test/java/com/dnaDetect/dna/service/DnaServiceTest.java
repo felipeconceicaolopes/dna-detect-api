@@ -15,16 +15,13 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
-import com.dnaDetectApi.DnaDetectApiApplication;
 import com.dnaDetectApi.entity.Dna;
 import com.dnaDetectApi.repository.DnaRepository;
 import com.dnaDetectApi.service.DnaService;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = DnaDetectApiApplication.class)
+@RunWith(MockitoJUnitRunner.class)
 public class DnaServiceTest {
 	
 	@InjectMocks
