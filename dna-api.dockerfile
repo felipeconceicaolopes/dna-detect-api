@@ -7,4 +7,4 @@ COPY . .
 RUN mvn clean install
 RUN rm -rf ~/.m2/repository
 
-ENTRYPOINT ["java","-jar","dna-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java","-jar","target/dna-0.0.1-SNAPSHOT.jar"]

@@ -139,8 +139,12 @@ public class DnaService {
 		
 		Long mutant = listDnas.stream().filter(dna -> isSimian(stringToArray(dna.getDna()))).count();
 		Long human = listDnas.stream().filter(dna -> !isSimian(stringToArray(dna.getDna()))).count();
+		Long ratio = new Long(0);
 		
-		return "{count_mutant_dna: "+mutant+", count_human_dna: "+human+", ratio: "+mutant/human+"}";
+		if(mutant > 0 && human > 0)
+			ratio = mutant/human;
+		
+		return "{count_mutant_dna: "+mutant+", count_human_dna: "+human+", ratio: "+ratio+"}";
 	}
 	
 	public void save(DnaDto dnaDto) {
