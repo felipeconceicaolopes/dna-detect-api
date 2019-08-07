@@ -1,5 +1,6 @@
 package com.dnaDetectApi.resources;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dnaDetectApi.entity.Dna;
+import com.dnaDetectApi.dto.DnaDto;
 import com.dnaDetectApi.service.DnaService;
 
 import io.swagger.annotations.Api;
@@ -25,9 +26,9 @@ public class DNAController {
 	private DnaService dnaService;
 	
 	@ApiOperation(value = "Find DNA teste")
-	@GetMapping
-	public ResponseEntity<?> getDNA() {
-		return ResponseEntity.ok("teste DNA");
+	@GetMapping("/stats")
+	public ResponseEntity<?> getDNA() {		
+		return ResponseEntity.ok(dnaService.getStats());
 	}
 	
 	@ApiOperation(value = "Comparation Simian")
@@ -36,10 +37,12 @@ public class DNAController {
  	@ApiResponse(code = 403, message = "Forbidden"),
 	@ApiResponse(code = 409, message = "Conflict")})
 	@PostMapping("/simian")
-	public ResponseEntity<Void> getSimian(@RequestBody Dna dna){
+	public ResponseEntity<Void> getSimian(@RequestBody DnaDto dnaDto){
 		
-		if(dnaService.hasNitrogenBase(dna.getDna())) {
-			return dnaService.isSimian(dna.getDna()) == Boolean.TRUE ? ResponseEntity.status(200).build()
+		if(dnaService.hasNitrogenBase(dnaDto.getDna())) {
+			dnaService.save(dnaDto);
+			
+			return dnaService.isSimian(dnaDto.getDna()) == Boolean.TRUE ? ResponseEntity.status(200).build()
 					: ResponseEntity.status(403).build();
 		}else {
 			return ResponseEntity.status(409).build();

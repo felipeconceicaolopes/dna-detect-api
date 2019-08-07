@@ -1,5 +1,6 @@
 package com.dnaDetectApi.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -11,7 +12,8 @@ public class Dna {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	private String[] dna;
+	@Column(unique=true)
+	private String dna;
 	
 	public Long getId() {
 		return id;
@@ -21,11 +23,11 @@ public class Dna {
 		this.id = id;
 	}
 
-	public String[] getDna() {
+	public String getDna() {
 		return dna;
 	}
 
-	public void setDna(String[] dna) {
+	public void setDna(String dna) {
 		this.dna = dna;
 	}
 }

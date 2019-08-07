@@ -3,24 +3,35 @@ package com.dnaDetect.dna.service;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.dnaDetectApi.DnaDetectApiApplication;
+import com.dnaDetectApi.entity.Dna;
+import com.dnaDetectApi.repository.DnaRepository;
 import com.dnaDetectApi.service.DnaService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = DnaDetectApiApplication.class)
 public class DnaServiceTest {
 	
-	@Autowired
+	@InjectMocks
 	private DnaService dnaService;
+	
+	@Mock
+	private DnaRepository dnaRepository;
 	
 	private static final String[] DNA_SIMIAN = {"CTGAGA", "CTGAGC", "TATTGT", "AGAGGG", "CCCCTA", "TCACTG"};
 	private static final String[] DNA_NOT_SIMIAN = {"ATGCGA", "CAGTGC", "TTATGT", "AGACCG", "CCACTA", "CACCTG"};
@@ -31,11 +42,13 @@ public class DnaServiceTest {
 	
 	private static final String[] DNA_NITROGEN_BASE_OK = {"CTGAGA", "CTGAGC", "TATTGT", "AGAGGG", "CCCCTA", "TCACTG"};
 	private static final String[] DNA_NITROGEN_BASE_NOT_OK = {"CZGAGA", "CTVAGC", "TAKTGT", "AGAGGG", "CCCCTA", "TCACTG"};
+	private static final String   RETURN_STATS = "{count_mutant_dna: 1, count_human_dna: 1, ratio: 1}";
 	
 	private char[][] dnaHorz;
 	private char[][] dnaVert;
 	private char[][] dnaDiag;
 	private char[][] dnaAll;
+	private List<Dna> listDnas = new ArrayList<Dna>();
 	
 	@Before
 	public void init() {
@@ -43,6 +56,17 @@ public class DnaServiceTest {
 		dnaVert = dnaService.arraySequencesToMatrix(DNA_VERTICALLY);
 		dnaDiag = dnaService.arraySequencesToMatrix(DNA_DIAGONALLY);
 		dnaAll =  dnaService.arraySequencesToMatrix(DNA_ALL_DIRECTIONS);
+		
+		Dna dna1 = new Dna();
+		dna1.setId(new Long(1));
+		dna1.setDna("CTGAGA-CTGAGC-TATTGT-AGAGGG-CCCCTA-TCACTG");
+		
+		Dna dna2 = new Dna();
+		dna2.setId(new Long(2));
+		dna2.setDna("ATGCGA-CAGTGC-TTATGT-AGACCG-CCACTA-CACCTG");
+		
+		listDnas.add(dna1);
+		listDnas.add(dna2);
 	}
 	
 	@Test
@@ -120,5 +144,13 @@ public class DnaServiceTest {
 		
 		assertTrue(dnaService.hasNitrogenBase(DNA_NITROGEN_BASE_OK));
 		assertFalse(dnaService.hasNitrogenBase(DNA_NITROGEN_BASE_NOT_OK));
+	}
+	
+	@Test
+	public void getStatsTest() {
+		Mockito.when(dnaRepository.findAll()).thenReturn(listDnas);
+		
+		assertNotNull(dnaService.getStats());
+		assertEquals(dnaService.getStats(), RETURN_STATS);
 	}
 }

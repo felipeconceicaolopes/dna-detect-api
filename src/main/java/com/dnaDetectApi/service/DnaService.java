@@ -1,13 +1,22 @@
 package com.dnaDetectApi.service;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.dnaDetectApi.dto.DnaDto;
+import com.dnaDetectApi.entity.Dna;
+import com.dnaDetectApi.repository.DnaRepository;
 
 
 @Service
 public class DnaService {
+	
+	@Autowired
+	private DnaRepository dnaRepository;
 	
 	public Boolean isSimian(String[] dna) {
 		
@@ -45,7 +54,7 @@ public class DnaService {
 
 	public char[][] arraySequencesToMatrix(String[] dna) {
 		StringBuilder baseM = new StringBuilder();
-		char[][] m = new char[6][6];
+		char[][] m = new char[dna.length][dna.length];
 		int count = 0;
 		
 		for(String base : dna) {
@@ -124,4 +133,49 @@ public class DnaService {
 		
 		return Boolean.FALSE;
 	}	
+	
+	public String getStats() {
+		List<Dna> listDnas = dnaRepository.findAll();
+		
+		Long mutant = listDnas.stream().filter(dna -> isSimian(stringToArray(dna.getDna()))).count();
+		Long human = listDnas.stream().filter(dna -> !isSimian(stringToArray(dna.getDna()))).count();
+		
+		return "{count_mutant_dna: "+mutant+", count_human_dna: "+human+", ratio: "+mutant/human+"}";
+	}
+	
+	public void save(DnaDto dnaDto) {
+		Dna dna = dtoForEntity(dnaDto);
+		Dna dna2 = dnaRepository.findByDna(dna.getDna()); 
+		
+		if(dna2 != null) {
+			if(dna2.getDna() != null) {
+				if(!dna.getDna().equals(dnaRepository.findByDna(dna.getDna()).getDna()))
+					dnaRepository.save(dna);	
+			}
+		}else {
+			dnaRepository.save(dna);
+		}
+			
+	}
+	
+	private String[] stringToArray(String dnaString) {
+		
+		String[] dnaArray = dnaString.split("-");
+		
+		return dnaArray;
+	}
+	
+	private Dna dtoForEntity(DnaDto dto) {
+		Dna entity = new Dna();
+		StringBuilder baseSeq = new StringBuilder();
+		
+		for(String base : dto.getDna()) {
+			baseSeq.append(base).append("-");
+		}
+		baseSeq.deleteCharAt(baseSeq.length() - 1);
+		
+		entity.setDna(baseSeq.toString());
+		
+		return entity;
+	}
 }
