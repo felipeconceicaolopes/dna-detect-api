@@ -18,6 +18,8 @@ DNA API for comparison between Simians or Humans
 
  - In the project folder build the dockerimage:
     - ` sudo docker build -t ftiburcio/dna -f dna-api.dockerfile .`
+ - Run dockerimage:
+ 	- ` sudo docker run -p 8080:8080 ftiburcio/dna`
 
 ## Documentation
  - local: http://localhost:8080/swagger-ui.html
