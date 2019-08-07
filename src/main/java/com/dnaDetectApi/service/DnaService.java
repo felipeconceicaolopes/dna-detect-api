@@ -11,23 +11,21 @@ public class DnaService {
 	
 	public Boolean isSimian(String[] dna) {
 		
-		if(hasNitrogenBase(dna)) {
-			char[][] matrixDna = arraySequencesToMatrix(dna);
-			
-			if(validatingHorizontallyIfSimian(matrixDna))
-				return Boolean.TRUE;
-			
-			if(validatingVerticallyIfSimian(matrixDna))
-				return Boolean.TRUE;
-			
-			if(validatingDiagonallyIfSimian(matrixDna))
-				return Boolean.TRUE;
-		}
+		char[][] matrixDna = arraySequencesToMatrix(dna);
+		
+		if(validatingHorizontallyIfSimian(matrixDna))
+			return Boolean.TRUE;
+		
+		if(validatingVerticallyIfSimian(matrixDna))
+			return Boolean.TRUE;
+		
+		if(validatingDiagonallyIfSimian(matrixDna))
+			return Boolean.TRUE;
 		
 		return Boolean.FALSE;
 	}
 	
-	private Boolean hasNitrogenBase(String[] dna) {
+	public Boolean hasNitrogenBase(String[] dna) {
 		Pattern pattern = Pattern.compile("[ATCG]");
 		
 		for(String base : dna) {
@@ -45,7 +43,7 @@ public class DnaService {
 		return Boolean.TRUE;
 	}
 
-	private char[][] arraySequencesToMatrix(String[] dna) {
+	public char[][] arraySequencesToMatrix(String[] dna) {
 		StringBuilder baseM = new StringBuilder();
 		char[][] m = new char[6][6];
 		int count = 0;
@@ -64,7 +62,7 @@ public class DnaService {
 		return m;
 	}
 	
-	private Boolean validatingHorizontallyIfSimian(char dna[][]) {
+	public Boolean validatingHorizontallyIfSimian(char dna[][]) {
 		
 		for(int line = 0; line < dna.length; line++) {
 			int count = 0;
@@ -85,7 +83,7 @@ public class DnaService {
 		return Boolean.FALSE;
 	}
 	
-	private Boolean validatingVerticallyIfSimian(char dna[][]) {
+	public Boolean validatingVerticallyIfSimian(char dna[][]) {
 		
 		for(int column = 0; column < dna.length; column++) {
 			int count = 0;
@@ -100,16 +98,13 @@ public class DnaService {
 					letraBase = dna[line][column];
 					count = 0;
 				}	
-			}
-			if(count >= 3) {
-				return Boolean.TRUE;
-			}			
+			}	
 		}
 		
 		return Boolean.FALSE;
 	}
 	
-	private Boolean validatingDiagonallyIfSimian(char dna[][]) {
+	public Boolean validatingDiagonallyIfSimian(char dna[][]) {
 				
 		for(int line = 0 ; line < dna.length ; ++line){
 			int count = 0;

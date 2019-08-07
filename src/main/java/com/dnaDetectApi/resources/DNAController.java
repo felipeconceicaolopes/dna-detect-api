@@ -13,6 +13,8 @@ import com.dnaDetectApi.service.DnaService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 @RestController()
 @RequestMapping("/")
@@ -29,8 +31,18 @@ public class DNAController {
 	}
 	
 	@ApiOperation(value = "Comparation Simian")
+	@ApiResponses(value = { 
+ 	@ApiResponse(code = 200, message = "OK"),
+ 	@ApiResponse(code = 403, message = "Forbidden"),
+	@ApiResponse(code = 409, message = "Conflict")})
 	@PostMapping("/simian")
-	public ResponseEntity<Boolean> getSimian(@RequestBody Dna dna){
-		return ResponseEntity.ok(dnaService.isSimian(dna.getDna()));
+	public ResponseEntity<Void> getSimian(@RequestBody Dna dna){
+		
+		if(dnaService.hasNitrogenBase(dna.getDna())) {
+			return dnaService.isSimian(dna.getDna()) == Boolean.TRUE ? ResponseEntity.status(200).build()
+					: ResponseEntity.status(403).build();
+		}else {
+			return ResponseEntity.status(409).build();
+		}
 	}
 }
