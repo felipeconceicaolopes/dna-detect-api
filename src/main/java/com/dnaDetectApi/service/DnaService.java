@@ -20,16 +20,22 @@ public class DnaService {
 	
 	public Boolean isSimian(String[] dna) {
 		
+		for(String base : dna) {
+			if(base.length() != 6)
+				return Boolean.FALSE;
+		}
+		
 		char[][] matrixDna = arraySequencesToMatrix(dna);
-		
-		if(validatingHorizontallyIfSimian(matrixDna))
-			return Boolean.TRUE;
-		
-		if(validatingVerticallyIfSimian(matrixDna))
-			return Boolean.TRUE;
-		
-		if(validatingDiagonallyIfSimian(matrixDna))
-			return Boolean.TRUE;
+		if(matrixDna.length == 6) {
+			if(validatingHorizontallyIfSimian(matrixDna))
+				return Boolean.TRUE;
+			
+			if(validatingVerticallyIfSimian(matrixDna))
+				return Boolean.TRUE;
+			
+			if(validatingDiagonallyIfSimian(matrixDna))
+				return Boolean.TRUE;
+		}
 		
 		return Boolean.FALSE;
 	}
