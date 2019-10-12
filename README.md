@@ -23,4 +23,4 @@ DNA API for comparison between Simians or Humans
 
 ## Documentation
  - local: http://localhost:8080/swagger-ui.html
- - Prod:  https://dna-detect-api.herokuapp.com/swagger-ui.html
+ - Prod:  https://dna-detect-api.herokuapp.com/api/swagger-ui.html
