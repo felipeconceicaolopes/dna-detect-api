@@ -1,0 +1,30 @@
+version: '3.3'
+services:
+  db:
+    image: postgres:11.2
+    ports:
+      - 12345:5432
+    volumes:
+      - ./volume:/var/lib/postgresql
+    environment:
+      POSTGRES_DB: dna
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1234
+    networks:
+      - development-network
+  app:
+    image: dpage/pgadmin4
+    links:
+      - db:db
+    ports:
+      - 80:80
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "felipeconceicaolopes@gmail.com"
+      PGADMIN_DEFAULT_PASSWORD: "1234"
+    depends_on:
+      - db
+    networks:
+      - development-network
+networks:
+ development-network:
+   driver: bridge
